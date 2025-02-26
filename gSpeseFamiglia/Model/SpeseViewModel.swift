@@ -18,6 +18,10 @@ class SpeseViewModel: ObservableObject {
     @Published var quarterlyTotals: [String: Double] = [:]
     @Published var yearlyTotals: [String: Double] = [:]
     
+    @Published var userMonthlyTotals: [String: [String: Double]] = [:]
+    @Published var userQuarterlyTotals: [String: [String: Double]] = [:]
+    @Published var userYearlyTotals: [String: [String: Double]] = [:]
+    
     private var db = Firestore.firestore()
     
     init() {
@@ -54,10 +58,15 @@ class SpeseViewModel: ObservableObject {
         var quarterlySums: [String: Double] = [:]
         var yearlySums: [String: Double] = [:]
         
+        var userMonthlySums: [String: [String: Double]] = [:]
+        var userQuarterlySums: [String: [String: Double]] = [:]
+        var userYearlySums: [String: [String: Double]] = [:]
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM"
         
         for expense in spese {
+            let userId = expense.addedBy
             let monthKey = dateFormatter.string(from: expense.addedOn)
             let yearKey = Calendar.current.component(.year, from: expense.addedOn)
             let quarter = (Calendar.current.component(.month, from: expense.addedOn) - 1) / 3 + 1
@@ -66,11 +75,19 @@ class SpeseViewModel: ObservableObject {
             monthlySums[monthKey, default: 0] += expense.euro
             quarterlySums[quarterKey, default: 0] += expense.euro
             yearlySums["\(yearKey)", default: 0] += expense.euro
+            
+            userMonthlySums[userId, default: [:]][monthKey, default: 0] += expense.euro
+            userQuarterlySums[userId, default: [:]][quarterKey, default: 0] += expense.euro
+            userYearlySums[userId, default: [:]]["\(yearKey)", default: 0] += expense.euro
         }
         
         self.monthlyTotals = monthlySums
         self.quarterlyTotals = quarterlySums
         self.yearlyTotals = yearlySums
+        
+        self.userMonthlyTotals = userMonthlySums
+        self.userQuarterlyTotals = userQuarterlySums
+        self.userYearlyTotals = userYearlySums
     }
     
     func fetchTotalePerUtente() {
