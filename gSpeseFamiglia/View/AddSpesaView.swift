@@ -1,0 +1,49 @@
+//
+//  AddSpesaView.swift
+//  gSpeseFamiglia
+//
+//  Created by Giacomo on 19/02/25.
+//
+
+import SwiftUI
+
+struct AddSpesaView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var speseVM: SpeseViewModel
+    @State private var note = ""
+    @State private var euro = ""
+    @State private var categoria = ""
+    @State private var date: Date = Date()
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                TextField("Euro", text: $euro)
+                    .keyboardType(.decimalPad)
+                TextField("Note", text: $note)
+                TextField("Categoria", text: $categoria)
+                DatePicker("Data", selection: $date, displayedComponents: .date)
+            }
+            .navigationTitle("Aggiungi Spesa")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Annulla") { dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Salva") {
+                        if let amountValue = Double(euro) {
+                            let spesa = Spesa(euro: amountValue, nota: note, categoria: categoria, addedOn: date)
+                            speseVM.add(spesa: spesa)
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    AddSpesaView(speseVM: SpeseViewModel())
+}
