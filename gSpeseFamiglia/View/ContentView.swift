@@ -17,7 +17,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 List(speseVM.totalePerUtente, id: \ .userId) { userTotal in
-                    NavigationLink(destination: UserExpenseDetailView(userId: userTotal.userId, viewModel: speseVM)) {
+                    NavigationLink(destination: UserAggregateView(userId: userTotal.userId, viewModel: speseVM)) {
                         HStack {
                             Text("\(userTotal.userId)")
                             Spacer()
