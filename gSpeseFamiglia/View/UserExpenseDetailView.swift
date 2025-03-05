@@ -4,6 +4,7 @@
 //
 //  Created by Giacomo on 26/02/25.
 //
+//  NON UTILIZZATA: la tengo qui nel caso dovesse servire in futuro
 
 import SwiftUI
 
