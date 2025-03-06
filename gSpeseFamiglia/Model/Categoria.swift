@@ -15,6 +15,7 @@ enum Categoria : String, CaseIterable {
     case intrattenimento = "Intrattenimento"
     case istruzioni = "Istruzione"
     case regali = "Regali"
+    case ristorante = "Ristorante"
     case salute = "Salute"
     case sport = "Sport"
     case trasporti = "Trasporti"

@@ -21,8 +21,11 @@ class SpeseViewModel: ObservableObject {
     @Published var userMonthlyTotals: [String: [String: Double]] = [:]
     @Published var userQuarterlyTotals: [String: [String: Double]] = [:]
     @Published var userYearlyTotals: [String: [String: Double]] = [:]
-    @Published var categoryTotals: [String: Double] = [:] // Totale per categoria
-    @Published var categoryUserTotals: [String: [String: Double]] = [:] // Totale per categoria suddiviso per utente
+    
+    @Published var categoryTotals: [String: Double] = [:] // Totale per categoria EVENTUALMENTE SI PUO' TOGLIERE
+    @Published var categoryUserTotals: [String: [String: Double]] = [:] // Totale per categoria suddiviso per utente EVENTUALMENTE SI PUO' TOGLIERE
+    @Published var periodCategoryTotals: [String: [String: Double]] = [:]
+    @Published var periodCategoryUserTotals: [String: [String: [String: Double]]] = [:]
     
     private var db = Firestore.firestore()
     
@@ -64,8 +67,10 @@ class SpeseViewModel: ObservableObject {
         var userQuarterlySums: [String: [String: Double]] = [:]
         var userYearlySums: [String: [String: Double]] = [:]
         
-        var categorySums: [String: Double] = [:]
-        var categoryUserSums: [String: [String: Double]] = [:]
+        var categorySums: [String: Double] = [:] // eventualmente si può togliere
+        var categoryUserSums: [String: [String: Double]] = [:] // eventualmente si può togliere
+        var periodCategorySums: [String: [String: Double]] = [:]
+        var periodCategoryUserSums: [String: [String: [String: Double]]] = [:]
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM"
@@ -94,6 +99,12 @@ class SpeseViewModel: ObservableObject {
             
             categorySums[expense.categoria, default: 0] += expense.euro
             categoryUserSums[expense.categoria, default: [:]][userId, default: 0] += expense.euro
+            
+            let periods = [monthKey, quarterKey, yearKey]
+            for period in periods {
+                periodCategorySums[period, default: [:]][expense.categoria, default: 0] += expense.euro
+                periodCategoryUserSums[period, default: [:]][expense.categoria, default: [:]][expense.addedBy, default: 0] += expense.euro
+            }
         }
         
         self.monthlyTotals = monthlySums
@@ -112,6 +123,9 @@ class SpeseViewModel: ObservableObject {
             userTotals.sorted { $0.value > $1.value } // Ordina i totali degli utenti per categoria
                 .reduce(into: [:]) { $0[$1.key] = $1.value }
         }
+        
+        self.periodCategoryTotals = periodCategorySums
+        self.periodCategoryUserTotals = periodCategoryUserSums
     }
     
     func fetchTotalePerUtente() {

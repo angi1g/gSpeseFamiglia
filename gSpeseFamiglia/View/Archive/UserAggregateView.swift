@@ -1,20 +1,22 @@
 //
-//  SpeseAggregateView.swift
+//  UserAggregateView.swift
 //  gSpeseFamiglia
 //
-//  Created by Giacomo on 25/02/25.
+//  Created by Giacomo on 27/02/25.
 //
+//  NON UTILIZZATA
 
 import SwiftUI
 
-struct SpeseAggregateView: View {
+struct UserAggregateView: View {
+    var userId: String
     @ObservedObject var viewModel: SpeseViewModel
     
     var body: some View {
         VStack {
             Text("Totale spese per mese")
                 .font(.headline)
-            List(viewModel.monthlyTotals.sorted { $0.key > $1.key }, id: \ .key) { key, value in
+            List((viewModel.userMonthlyTotals[userId]?.sorted { $0.key > $1.key }) ?? [], id: \ .key) { key, value in
                 HStack {
                     Text(key)
                     Spacer()
@@ -24,7 +26,7 @@ struct SpeseAggregateView: View {
             
             Text("Totale spese per quadrimestre")
                 .font(.headline)
-            List(viewModel.quarterlyTotals.sorted { $0.key > $1.key }, id: \ .key) { key, value in
+            List(viewModel.userQuarterlyTotals[userId]?.sorted { $0.key > $1.key } ?? [], id: \ .key) { key, value in
                 HStack {
                     Text(key)
                     Spacer()
@@ -34,7 +36,7 @@ struct SpeseAggregateView: View {
             
             Text("Totale spese per anno")
                 .font(.headline)
-            List(viewModel.yearlyTotals.sorted { $0.key > $1.key }, id: \ .key) { key, value in
+            List(viewModel.userYearlyTotals[userId]?.sorted { $0.key > $1.key } ?? [], id: \ .key) { key, value in
                 HStack {
                     Text(key)
                     Spacer()
@@ -47,5 +49,5 @@ struct SpeseAggregateView: View {
 }
 
 #Preview {
-    SpeseAggregateView(viewModel: SpeseViewModel())
+    UserAggregateView(userId: "angi1g@gmail.com", viewModel: SpeseViewModel())
 }

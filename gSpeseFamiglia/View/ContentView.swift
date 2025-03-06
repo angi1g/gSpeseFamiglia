@@ -17,13 +17,11 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 List(speseVM.totalePerUtente, id: \ .userId) { userTotal in
-                    //NavigationLink(destination: UserAggregateView(userId: userTotal.userId, viewModel: speseVM)) {
-                        HStack {
-                            Text("\(userTotal.userId)")
-                            Spacer()
-                            Text("€ \(userTotal.total, specifier: "%.2f")")
-                        }
-                    //}
+                    HStack {
+                        Text("\(userTotal.userId)")
+                        Spacer()
+                        Text("€ \(userTotal.total, specifier: "%.2f")")
+                    }
                 }
                 .frame(maxHeight: 150)
                 List {
@@ -73,8 +71,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .bottomBar) {
                     NavigationLink {
-                        ExpenseTabView(viewModel: speseVM)
-                        //SpeseAggregateView(viewModel: speseVM)
+                        TimeTabView(viewModel: speseVM)
                         //ExpenseSummaryView(viewModel: speseVM)
                     } label: {
                         Image(systemName: "magnifyingglass")
